@@ -1,0 +1,4 @@
+# Permite que estas dependencias ejecuten sus scripts de instalación (pnpm v10+ los bloquea por defecto).
+onlyBuiltDependencies:
+  - esbuild
+  - sharp

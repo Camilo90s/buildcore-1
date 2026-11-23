@@ -1,0 +1,67 @@
+---
+import Logo from './Logo.astro';
+import { nav, services, site } from '../data/site';
+
+const year = new Date().getFullYear();
+const { address } = site;
+---
+
+<footer class="bg-navy text-white/70">
+  <div class="mx-auto grid max-w-[1440px] grid-cols-2 gap-x-8 gap-y-12 px-5 py-16 sm:px-8 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] lg:px-12 xl:px-[70px]">
+    <div class="col-span-2 md:col-span-1">
+      <a href="#home" aria-label="BuildCore Construction — back to top" class="inline-block">
+        <Logo variant="light" />
+      </a>
+      <p class="mt-6 max-w-[340px] text-[15.5px] leading-[1.7]">
+        Quality construction solutions delivered with integrity, precision and a commitment to excellence.
+      </p>
+      <ul class="mt-6 flex gap-3">
+        {
+          site.social.map((s) => (
+            <li>
+              <a
+                href={s.href}
+                rel="noopener"
+                target="_blank"
+                class="grid h-10 w-10 place-items-center rounded-[4px] border border-white/15 font-display text-[13px] font-bold text-white transition-colors hover:border-brand hover:bg-brand hover:text-navy"
+                aria-label={`BuildCore on ${s.label}`}
+              >
+                {s.label.slice(0, 2).toUpperCase()}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <nav aria-label="Footer navigation">
+      <h2 class="font-display text-[17px] font-bold tracking-[0.08em] text-white uppercase">Company</h2>
+      <ul class="mt-5 space-y-3 text-[15.5px]">
+        {nav.map((item) => <li><a href={item.href} class="hover:text-brand">{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="font-display text-[17px] font-bold tracking-[0.08em] text-white uppercase">Services</h2>
+      <ul class="mt-5 space-y-3 text-[15.5px]">
+        {services.map((s) => <li><a href="#services" class="hover:text-brand">{s.title}</a></li>)}
+      </ul>
+    </div>
+
+    <div class="col-span-2 md:col-span-1">
+      <h2 class="font-display text-[17px] font-bold tracking-[0.08em] text-white uppercase">Get in touch</h2>
+      <ul class="mt-5 space-y-3 text-[15.5px]">
+        <li><a href={`tel:${site.phoneHref}`} class="hover:text-brand">{site.phone}</a></li>
+        <li><a href={`mailto:${site.email}`} class="break-words hover:text-brand">{site.email}</a></li>
+        <li>{address.street}<br />{address.city}, {address.region} {address.postalCode}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="mx-auto flex max-w-[1440px] flex-col gap-2 px-5 py-6 text-[14px] sm:flex-row sm:justify-between sm:px-8 lg:px-12 xl:px-[70px]">
+      <p>© {year} {site.name}. All rights reserved.</p>
+      <p>Licensed &amp; insured general contractor.</p>
+    </div>
+  </div>
+</footer>

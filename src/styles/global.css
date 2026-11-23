@@ -1,0 +1,364 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --font-display: var(--font-barlow);
+  --font-sans: var(--font-inter);
+}
+
+@theme {
+  --color-brand: #f6b024;
+  --color-brand-600: #e39f14;
+  /* Variantes de texto sobre fondo claro (contraste WCAG AA) */
+  --color-brand-deep: #b77c00;
+  --color-brand-ink: #9a6500;
+  --color-navy: #021420;
+  --color-navy-800: #0a2233;
+  --color-navy-700: #12304a;
+  --color-ink: #111418;
+  --color-muted: #4b4f55;
+  --color-surface: #fbfbfd;
+  --color-line: #e9e9eb;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 72px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (min-width: 64rem) {
+    html {
+      scroll-padding-top: 96px;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    html {
+      scroll-padding-top: 114px;
+    }
+  }
+
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+    /* Evita scroll horizontal por las animaciones laterales sin romper position: sticky */
+    overflow-x: clip;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Cielo del hero (solo escritorio): reproduce el degradado navy → azul de la referencia */
+  .hero-sky {
+    background:
+      linear-gradient(
+        90deg,
+        #021420 0%,
+        #021420 10%,
+        rgb(2 20 32 / 0.6) 22%,
+        rgb(2 20 32 / 0.15) 34%,
+        rgb(2 20 32 / 0) 42%
+      ),
+      linear-gradient(180deg, #3d6189 0%, #2a4b6e 25%, #13283b 55%, #0a1923 75%, #06121a 100%);
+  }
+
+  @media (min-width: 64rem) {
+    .hero-media {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 16%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 16%);
+    }
+  }
+
+  .hero-overlay {
+    background:
+      linear-gradient(90deg, rgb(2 20 32 / 0.9) 0%, rgb(2 20 32 / 0.66) 55%, rgb(2 20 32 / 0.2) 100%),
+      linear-gradient(180deg, rgb(2 20 32 / 0) 55%, rgb(2 20 32 / 0.85) 100%);
+  }
+
+  /* ---------- Botones ---------- */
+  .btn {
+    @apply relative isolate inline-flex h-[52px] items-center justify-center gap-[22px] overflow-hidden rounded-[4px] px-7 font-display text-[16px] font-bold tracking-[0.01em] uppercase transition-[color,background-color,border-color,box-shadow,translate] duration-300 sm:h-[58px] sm:px-[30px] sm:text-[18px];
+  }
+
+  .btn svg {
+    transition: transform 0.4s var(--ease-out-expo);
+  }
+
+  .btn:hover svg,
+  .btn:focus-visible svg {
+    transform: translateX(5px);
+  }
+
+  .btn-primary {
+    @apply bg-brand text-[#1d1505] hover:-translate-y-0.5 hover:bg-brand-600 hover:shadow-[0_14px_28px_-14px_rgb(246_176_36/0.9)];
+  }
+
+  /* Brillo que cruza el botón al pasar el cursor */
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(110deg, transparent 25%, rgb(255 255 255 / 0.55) 50%, transparent 75%);
+    transform: translateX(-110%);
+    transition: transform 0.9s var(--ease-out-expo);
+  }
+
+  .btn-primary:hover::after {
+    transform: translateX(110%);
+  }
+
+  .btn-outline {
+    @apply border-[1.5px] border-white/60 text-white hover:border-brand sm:px-[34px];
+  }
+
+  /* Relleno que entra de izquierda a derecha */
+  .btn-outline::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(255 255 255 / 0.09);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.55s var(--ease-out-expo);
+  }
+
+  .btn-outline:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-3 font-display text-[15px] font-bold tracking-[0.14em] text-brand-ink uppercase;
+  }
+
+  .eyebrow::before {
+    content: '';
+    @apply block h-[2px] w-8 origin-left bg-brand;
+  }
+
+  .section-title {
+    @apply font-display text-[34px] leading-[1.08] font-bold uppercase sm:text-[42px] lg:text-[48px];
+  }
+
+  /* Acento amarillo de los iconos de servicios */
+  .svc-accent {
+    transform-box: fill-box;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  .group:hover .svc-accent {
+    transform: translate(5px, -5px);
+  }
+
+  /* Barra de progreso de lectura (solo navegadores con scroll-driven animations) */
+  .scroll-progress {
+    display: none;
+  }
+
+  /* Marquesina */
+  .marquee-track {
+    animation: bc-marquee 38s linear infinite;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+/* =====================================================================
+   ANIMACIONES
+   Todo es CSS (transform/opacity, aceleradas por GPU). Si el usuario pide
+   "reducir movimiento" en su sistema, no se anima nada.
+   ===================================================================== */
+
+@keyframes bc-rise {
+  from {
+    transform: translate3d(0, 110%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes bc-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bc-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes bc-zoom-out {
+  from {
+    transform: scale(1.14);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes bc-marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes bc-parallax {
+  to {
+    transform: translate3d(0, 30vh, 0);
+  }
+}
+
+@keyframes bc-hero-out {
+  to {
+    opacity: 0;
+    transform: translate3d(0, 14vh, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* --- Entrada del hero (al cargar) --- */
+  .anim-rise {
+    animation: bc-rise 1.1s var(--ease-out-expo) both;
+    animation-delay: var(--d, 0s);
+  }
+
+  .anim-fade-up {
+    animation: bc-fade-up 1s var(--ease-out-expo) both;
+    animation-delay: var(--d, 0s);
+  }
+
+  .anim-grow-x {
+    transform-origin: left;
+    animation: bc-grow-x 1.1s var(--ease-out-expo) both;
+    animation-delay: var(--d, 0s);
+  }
+
+  .anim-zoom-out {
+    animation: bc-zoom-out 2.4s var(--ease-out-expo) both;
+  }
+
+  /* --- Aparición al hacer scroll (data-reveal + IntersectionObserver) --- */
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 36px, 0);
+    transition:
+      opacity 0.9s var(--ease-out-expo),
+      transform 0.9s var(--ease-out-expo);
+    transition-delay: var(--delay, 0ms);
+  }
+
+  .js [data-reveal='left'] {
+    transform: translate3d(-48px, 0, 0);
+  }
+
+  .js [data-reveal='right'] {
+    transform: translate3d(48px, 0, 0);
+  }
+
+  .js [data-reveal='zoom'] {
+    transform: scale(0.94);
+  }
+
+  .js [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* La línea del "eyebrow" se dibuja al aparecer */
+  .js .eyebrow[data-reveal]::before {
+    transform: scaleX(0);
+    transition: transform 0.9s var(--ease-out-expo) 0.3s;
+  }
+
+  .js .eyebrow[data-reveal].is-revealed::before {
+    transform: none;
+  }
+
+  /* El acento amarillo de los iconos se "dibuja" */
+  .js [data-reveal] .svc-accent {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition:
+      stroke-dashoffset 1.4s cubic-bezier(0.65, 0, 0.35, 1) calc(var(--delay, 0ms) + 350ms),
+      transform 0.6s var(--ease-out-expo);
+  }
+
+  .js [data-reveal].is-revealed .svc-accent {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* --- Efectos ligados al scroll (Chrome, Edge, Safari 26+; el resto los ignora) --- */
+/* Nota: animation-timeline va en un selector aparte (:root …) para que el minificador
+   no lo fusione dentro del shorthand "animation", que los navegadores rechazan. */
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    transform-origin: left;
+    animation: bc-grow-x linear both;
+  }
+
+  :root .scroll-progress {
+    animation-timeline: scroll(root);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax-y {
+      animation: bc-parallax linear both;
+    }
+
+    :root .parallax-y {
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+
+    .hero-scroll-out {
+      animation: bc-hero-out linear both;
+    }
+
+    :root .hero-scroll-out {
+      animation-timeline: scroll(root);
+      animation-range: 0 90vh;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+
+  .btn,
+  .btn svg,
+  .btn::before,
+  .btn::after,
+  .svc-accent {
+    transition: none !important;
+  }
+}

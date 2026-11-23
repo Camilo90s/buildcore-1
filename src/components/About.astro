@@ -1,0 +1,85 @@
+---
+import ArrowRight from './ArrowRight.astro';
+import { aboutPoints, site, stats } from '../data/site';
+
+// "850+" → { count: 850, suffix: "+" } para animar el número.
+const parseStat = (value: string) => {
+  const match = value.match(/^(\d+)(.*)$/);
+  return match ? { count: match[1], suffix: match[2] } : { count: undefined, suffix: '' };
+};
+---
+
+<section id="about" aria-labelledby="about-title" class="overflow-hidden bg-white py-20 lg:py-28">
+  <div class="mx-auto grid max-w-[1440px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:px-12 xl:px-[70px]">
+    <div>
+      <p class="eyebrow" data-reveal>About us</p>
+      <h2 id="about-title" class="section-title mt-4 text-navy" data-reveal style="--delay:80ms">
+        Built on trust.<br />
+        <span class="text-brand-deep">Driven by quality.</span>
+      </h2>
+      <p class="mt-6 max-w-[560px] text-[17px] leading-[1.75] text-muted" data-reveal style="--delay:160ms">
+        Since {site.foundingYear}, BuildCore Construction has partnered with homeowners, developers and
+        businesses to turn ambitious plans into durable, beautiful buildings. Our engineers, project managers
+        and craftsmen work as one team, so every project is delivered safely, on schedule and to the highest
+        standard.
+      </p>
+      <ul class="mt-8 space-y-4">
+        {
+          aboutPoints.map((point, i) => (
+            <li class="flex items-center gap-3 text-[16px] font-medium text-ink" data-reveal="left" style={`--delay:${240 + i * 90}ms`}>
+              <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand/15 text-brand-ink">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m5 12.5 4.5 4.5L19 7.5" />
+                </svg>
+              </span>
+              {point}
+            </li>
+          ))
+        }
+      </ul>
+      <div data-reveal style="--delay:450ms">
+        <a href="#company" class="btn mt-10 border-[1.5px] border-navy text-navy hover:bg-navy hover:text-white">
+          Why choose us
+          <ArrowRight class="h-[18px] w-[18px] text-brand" />
+        </a>
+      </div>
+    </div>
+
+    <div class="relative" data-reveal="right" style="--delay:150ms">
+      <div
+        class="absolute -top-4 -right-4 hidden h-full w-full rounded-[4px] border-2 border-brand/70 sm:block"
+        aria-hidden="true"
+      >
+      </div>
+      <dl class="relative grid grid-cols-2 overflow-hidden rounded-[4px] bg-navy text-white">
+        {
+          stats.map((stat, i) => {
+            const { count, suffix } = parseStat(stat.value);
+            return (
+              <div
+                class:list={[
+                  'group relative flex flex-col-reverse gap-2 p-7 sm:p-10',
+                  i % 2 === 1 && 'border-l border-white/10',
+                  i > 1 && 'border-t border-white/10',
+                ]}
+              >
+                <span
+                  class="absolute inset-x-0 bottom-0 h-[3px] origin-left scale-x-0 bg-brand transition-transform duration-500 ease-out-expo group-hover:scale-x-100"
+                  aria-hidden="true"
+                />
+                <dt class="text-[14px] font-medium tracking-wide text-white/70 sm:text-[15px]">{stat.label}</dt>
+                <dd
+                  class="font-display text-[42px] leading-none font-bold text-brand tabular-nums sm:text-[56px]"
+                  data-count={count}
+                  data-suffix={suffix}
+                >
+                  {stat.value}
+                </dd>
+              </div>
+            );
+          })
+        }
+      </dl>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,75 @@
+---
+import { Picture } from 'astro:assets';
+import ArrowRight from './ArrowRight.astro';
+import heroImage from '../assets/hero-building.jpg';
+
+const lines = [
+  { text: 'Building', className: '' },
+  { text: 'Tomorrow', className: '' },
+  { text: 'Together', className: 'text-brand' },
+];
+---
+
+<section id="home" aria-labelledby="hero-title" class="relative isolate overflow-hidden bg-navy">
+  <!-- Fondo: cielo + foto (parallax + zoom de entrada) + velo (solo móvil) -->
+  <div class="hero-sky absolute inset-0 -z-30 hidden lg:block" aria-hidden="true"></div>
+
+  <div class="hero-media absolute inset-0 -z-20 lg:left-[38.2%]">
+    <div class="parallax-y h-full w-full">
+      <Picture
+        src={heroImage}
+        formats={['avif', 'webp']}
+        widths={[480, 768, 1080, 1400, 1774]}
+        sizes="(min-width: 1024px) 62vw, 100vw"
+        alt="Modern two-story concrete and glass home lit at dusk, with a tower crane rising behind it"
+        priority
+        class="anim-zoom-out h-full w-full object-cover object-[60%_center] lg:object-[left_center]"
+        pictureAttributes={{ class: 'block h-full w-full' }}
+      />
+    </div>
+  </div>
+
+  <div class="hero-overlay absolute inset-0 -z-10 lg:hidden" aria-hidden="true"></div>
+
+  <div
+    class="hero-scroll-out mx-auto flex min-h-[600px] max-w-[1440px] flex-col justify-center px-5 py-16 sm:min-h-[640px] sm:px-8 sm:py-20 lg:min-h-[640px] lg:px-12 xl:min-h-[711px] xl:justify-start xl:px-[70px] xl:pt-[128px] xl:pb-[94px]"
+  >
+    <h1
+      id="hero-title"
+      class="font-display text-[46px] leading-[1.06] font-bold text-white uppercase sm:text-[60px] lg:text-[68px] xl:text-[75px] xl:leading-[78px]"
+    >
+      {
+        lines.map((line, i) => (
+          <span class="block overflow-hidden">
+            <span class:list={['anim-rise block', line.className]} style={`--d:${0.15 + i * 0.12}s`}>
+              {line.text}
+            </span>{' '}
+          </span>
+        ))
+      }
+    </h1>
+
+    <div class="anim-grow-x mt-6 flex h-[2px] w-[180px] sm:w-[225px] xl:mt-[32px]" style="--d:.65s" aria-hidden="true">
+      <span class="w-[68px] bg-brand"></span>
+      <span class="flex-1 bg-brand/25"></span>
+    </div>
+
+    <p
+      class="anim-fade-up mt-6 max-w-[432px] text-[17px] leading-[1.65] font-[450] tracking-[0.015em] text-[#e2e6ea] sm:text-[19px] xl:mt-[26px] xl:text-[20px] xl:leading-[34px]"
+      style="--d:.75s"
+    >
+      We deliver quality construction solutions with integrity, precision, and a commitment to excellence.
+    </p>
+
+    <div class="mt-8 flex flex-col gap-4 min-[420px]:flex-row xl:mt-[35px]">
+      <a href="#services" class="anim-fade-up btn btn-primary" style="--d:.9s">
+        Our services
+        <ArrowRight />
+      </a>
+      <a href="#projects" class="anim-fade-up btn btn-outline" style="--d:1s">
+        View projects
+        <ArrowRight class="h-[18px] w-[18px] text-brand" />
+      </a>
+    </div>
+  </div>
+</section>

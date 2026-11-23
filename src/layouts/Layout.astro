@@ -1,0 +1,172 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import { services, site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  image = '/og-image.jpg',
+  imageAlt = 'BuildCore Construction — Building Tomorrow Together',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const siteUrl = new URL('/', Astro.site).href;
+
+// Datos estructurados (schema.org) para resultados enriquecidos en Google.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'GeneralContractor',
+      '@id': `${siteUrl}#organization`,
+      name: site.name,
+      url: siteUrl,
+      logo: new URL('/favicon.svg', Astro.site).href,
+      image: ogImage.href,
+      description,
+      telephone: site.phone,
+      email: site.email,
+      foundingDate: String(site.foundingYear),
+      priceRange: '$$$',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: site.address.street,
+        addressLocality: site.address.city,
+        addressRegion: site.address.region,
+        postalCode: site.address.postalCode,
+        addressCountry: site.address.country,
+      },
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '07:00',
+        closes: '18:00',
+      },
+      sameAs: site.social.map((s) => s.href),
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Construction services',
+        itemListElement: services.map((s) => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: `${s.title} construction`, description: s.description },
+        })),
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}#website`,
+      url: siteUrl,
+      name: site.name,
+      inLanguage: 'en',
+      publisher: { '@id': `${siteUrl}#organization` },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="theme-color" content="#021420" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Activa las animaciones de aparición solo si hay JS (sin JS todo se ve normal) -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+
+    <Font cssVariable="--font-barlow" preload />
+    <Font cssVariable="--font-inter" preload />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="sr-only z-[60] rounded-[4px] bg-brand px-4 py-2 font-semibold text-navy focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+      >Skip to content</a
+    >
+    <slot />
+
+    <script>
+      // Aparición al hacer scroll + contadores animados. ~1 KB, sin librerías.
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+      const countUp = (el: HTMLElement) => {
+        const end = Number(el.dataset.count);
+        const suffix = el.dataset.suffix ?? '';
+        if (!Number.isFinite(end) || reduceMotion) return;
+        const duration = 1800;
+        let start: number | undefined;
+        const tick = (now: number) => {
+          start ??= now;
+          const p = Math.min((now - start) / duration, 1);
+          el.textContent = `${Math.round(end * (1 - Math.pow(1 - p, 4)))}${suffix}`;
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      };
+
+      const reveal = (el: HTMLElement) => {
+        el.classList.add('is-revealed');
+        el.querySelectorAll<HTMLElement>('[data-count]').forEach(countUp);
+      };
+
+      if (!('IntersectionObserver' in window)) {
+        targets.forEach(reveal);
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              io.unobserve(entry.target);
+              reveal(entry.target as HTMLElement);
+            }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -6% 0px' },
+        );
+        targets.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

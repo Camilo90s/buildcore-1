@@ -1,0 +1,131 @@
+---
+import ArrowRight from './ArrowRight.astro';
+import { services, site } from '../data/site';
+
+const { address } = site;
+const contactItems = [
+  {
+    label: 'Call us',
+    value: site.phone,
+    href: `tel:${site.phoneHref}`,
+    icon: 'M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 6.1 6.1l1.4-2.3L20 15.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z',
+  },
+  {
+    label: 'Email',
+    value: site.email,
+    href: `mailto:${site.email}`,
+    icon: 'M3.5 6.5h17v11h-17Zm0 0L12 13l8.5-6.5',
+  },
+  {
+    label: 'Office',
+    value: `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`,
+    href: undefined,
+    icon: 'M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21Zm0-9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z',
+  },
+  {
+    label: 'Hours',
+    value: site.hours,
+    href: undefined,
+    icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13.5V12l3 2',
+  },
+];
+
+const field =
+  'mt-2 block w-full rounded-[4px] border border-line bg-white px-4 py-3.5 text-[16px] text-ink placeholder:text-[#9a9ea4] transition-colors outline-none focus:border-brand focus:ring-2 focus:ring-brand/25';
+const labelCls = 'text-[14px] font-semibold text-ink';
+---
+
+<!-- Banda CTA -->
+<section aria-labelledby="cta-title" class="overflow-hidden bg-brand">
+  <div class="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-6 px-5 py-12 sm:px-8 md:flex-row md:items-center lg:px-12 xl:px-[70px]">
+    <div data-reveal="left">
+      <h2 id="cta-title" class="font-display text-[30px] leading-tight font-bold text-navy uppercase sm:text-[38px]">Have a project in mind?</h2>
+      <p class="mt-1 text-[17px] text-navy/80">Tell us about it and get a free, no-obligation estimate.</p>
+    </div>
+    <div data-reveal="right" class="shrink-0">
+    <a href="#contact" class="btn shrink-0 bg-navy text-white hover:-translate-y-0.5 hover:bg-navy-700 hover:shadow-[0_14px_28px_-14px_rgb(2_20_32/0.7)]">
+      Get a quote
+      <ArrowRight class="h-[18px] w-[18px] text-brand" />
+    </a>
+    </div>
+  </div>
+</section>
+
+<section id="contact" aria-labelledby="contact-title" class="overflow-x-clip bg-white py-20 lg:py-28">
+  <div class="mx-auto grid max-w-[1440px] gap-14 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12 xl:px-[70px]">
+    <div>
+      <p class="eyebrow" data-reveal>Contact</p>
+      <h2 id="contact-title" class="section-title mt-4 text-navy" data-reveal style="--delay:80ms">Let's build<br /><span class="text-brand-deep">together</span></h2>
+      <p class="mt-6 max-w-[460px] text-[17px] leading-[1.75] text-muted" data-reveal style="--delay:160ms">
+        Share a few details about your project and our team will get back to you within one business day.
+      </p>
+
+      <address class="mt-10 grid gap-6 not-italic sm:grid-cols-2 lg:grid-cols-1">
+        {
+          contactItems.map((item, i) => (
+            <div class="group flex items-start gap-4" data-reveal style={`--delay:${200 + i * 90}ms`}>
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-[4px] bg-navy text-brand transition-colors duration-300 group-hover:bg-brand group-hover:text-navy">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d={item.icon} />
+                </svg>
+              </span>
+              <span>
+                <span class="block text-[13px] font-semibold tracking-[0.12em] text-[#646970] uppercase">{item.label}</span>
+                {item.href ? (
+                  <a href={item.href} class="mt-1 block text-[17px] font-medium break-words text-ink hover:text-brand-600">
+                    {item.value}
+                  </a>
+                ) : (
+                  <span class="mt-1 block text-[17px] font-medium text-ink">{item.value}</span>
+                )}
+              </span>
+            </div>
+          ))
+        }
+      </address>
+    </div>
+
+    <!--
+      Conecta el formulario a tu backend o a un servicio (Formspree, Web3Forms, Netlify Forms…)
+      cambiando el atributo action.
+    -->
+    <form
+      action="https://formspree.io/f/YOUR_FORM_ID"
+      method="POST"
+      data-reveal="right"
+      style="--delay:120ms"
+      class="rounded-[4px] border border-line bg-surface p-6 shadow-[0_30px_60px_-40px_rgb(2_20_32/0.35)] sm:p-10"
+    >
+      <div class="grid gap-5 sm:grid-cols-2">
+        <label class="block">
+          <span class={labelCls}>Full name</span>
+          <input class={field} type="text" name="name" autocomplete="name" placeholder="John Carter" required />
+        </label>
+        <label class="block">
+          <span class={labelCls}>Email</span>
+          <input class={field} type="email" name="email" autocomplete="email" placeholder="john@company.com" required />
+        </label>
+        <label class="block">
+          <span class={labelCls}>Phone</span>
+          <input class={field} type="tel" name="phone" autocomplete="tel" placeholder="+1 (555) 000-0000" />
+        </label>
+        <label class="block">
+          <span class={labelCls}>Project type</span>
+          <select class={field} name="project_type" required>
+            <option value="" disabled selected>Select a service</option>
+            {services.map((s) => <option value={s.title}>{s.title}</option>)}
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <label class="block sm:col-span-2">
+          <span class={labelCls}>Project details</span>
+          <textarea class={`${field} min-h-[140px] resize-y`} name="message" rows="5" placeholder="Location, size, timeline and budget…" required></textarea>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary mt-7 w-full sm:w-auto">
+        Send request
+        <ArrowRight />
+      </button>
+    </form>
+  </div>
+</section>

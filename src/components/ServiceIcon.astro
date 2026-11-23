@@ -1,0 +1,103 @@
+---
+import type { ServiceIcon } from '../data/site';
+
+interface Props {
+  name: ServiceIcon;
+  class?: string;
+}
+const { name, class: className = 'h-[70px] w-auto' } = Astro.props;
+
+// Iconos de línea: trazo oscuro + acento amarillo detrás (relleno con el color de fondo
+// para que el acento quede "oculto" tras el edificio, igual que en el diseño).
+const bg = 'var(--color-surface)';
+---
+
+{
+  name === 'residential' && (
+    <svg class={className} viewBox="0 0 76 72" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="44" y="14" width="28" height="22" class="svc-accent" pathLength="100" stroke="#F6B024" stroke-width="2" />
+      <g stroke="#17181a" stroke-width="2.9">
+        <path d="M10 30v36h42V30L31 11Z" fill={bg} stroke="none" />
+        <path d="M43 15.5V8h7v14" fill={bg} />
+        <path d="M3 34 31 9l28 25" />
+        <path d="M10 28v38M52 28v38M4 66h54" />
+        <path d="M23 66V46h15v20" />
+      </g>
+    </svg>
+  )
+}
+
+{
+  name === 'commercial' && (
+    <svg class={className} viewBox="0 0 84 72" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="52" y="17" width="28" height="52" class="svc-accent" pathLength="100" stroke="#F6B024" stroke-width="2" />
+      <g stroke="#17181a" stroke-width="2.9">
+        <rect x="9" y="3" width="25" height="66" fill={bg} />
+        <path d="M9 40H3v29" />
+        <rect x="41" y="27" width="23" height="42" fill={bg} />
+        <path d="M1 69h68" />
+        <path d="M19 69v-8h5v8" />
+      </g>
+      <g fill="#17181a">
+        <rect x="14" y="10" width="4" height="4" rx=".5" />
+        <rect x="20.5" y="10" width="4" height="4" rx=".5" />
+        <rect x="27" y="10" width="4" height="4" rx=".5" />
+        <rect x="14" y="19" width="4" height="4" rx=".5" />
+        <rect x="20.5" y="19" width="4" height="4" rx=".5" />
+        <rect x="27" y="19" width="4" height="4" rx=".5" />
+        <rect x="14" y="28" width="4" height="4" rx=".5" />
+        <rect x="20.5" y="28" width="4" height="4" rx=".5" />
+        <rect x="27" y="28" width="4" height="4" rx=".5" />
+        <rect x="14" y="37" width="4" height="4" rx=".5" />
+        <rect x="20.5" y="37" width="4" height="4" rx=".5" />
+        <rect x="27" y="37" width="4" height="4" rx=".5" />
+        <rect x="14" y="46" width="4" height="4" rx=".5" />
+        <rect x="27" y="46" width="4" height="4" rx=".5" />
+        <rect x="46" y="34" width="4" height="4" rx=".5" />
+        <rect x="55" y="34" width="4" height="4" rx=".5" />
+        <rect x="46" y="43" width="4" height="4" rx=".5" />
+        <rect x="55" y="43" width="4" height="4" rx=".5" />
+        <rect x="46" y="52" width="4" height="4" rx=".5" />
+        <rect x="55" y="52" width="4" height="4" rx=".5" />
+      </g>
+    </svg>
+  )
+}
+
+{
+  name === 'industrial' && (
+    <svg class={className} viewBox="0 0 84 72" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="40" y="44" width="40" height="24" class="svc-accent" pathLength="100" stroke="#F6B024" stroke-width="2" />
+      <g stroke="#17181a" stroke-width="2.9">
+        <path d="M4 68V38l16-10v10l16-10v10l16-10v10l14-6v36Z" fill={bg} stroke="none" />
+        <path d="M4 68V38l16-10v10l16-10v10l16-10v10l14-6" />
+        <path d="M66 32v36M2 68h68" />
+        <path d="M12 33V9M58 30V9" />
+        <circle cx="12" cy="6" r="3" fill={bg} />
+        <circle cx="58" cy="6" r="3" fill={bg} />
+        <path d="M31 13.5l3.5 3.5 4.5-6" />
+        <rect x="14" y="47" width="8" height="8" />
+        <rect x="31" y="47" width="8" height="8" />
+        <rect x="48" y="47" width="8" height="8" />
+      </g>
+    </svg>
+  )
+}
+
+{
+  name === 'design' && (
+    <svg class={className} viewBox="0 0 80 72" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="49" y="40" width="28" height="26" class="svc-accent" pathLength="100" stroke="#F6B024" stroke-width="2" />
+      <path d="M33 13V2m-3.5 3.5L33 2l3.5 3.5" class="svc-accent" pathLength="100" stroke="#F6B024" stroke-width="2" />
+      <g stroke="#17181a" stroke-width="2.9">
+        <rect x="3" y="3" width="16" height="66" rx="1.5" fill={bg} />
+        <path d="M19 12h-6M19 20h-4M19 28h-6M19 36h-4M19 44h-6M19 52h-4M19 60h-6" />
+        <path d="M26 66 66 34v32Z" fill={bg} />
+        <path d="M44 61 61 47v14Z" />
+        <path d="m16 58 41-41 9 9-41 41Z" fill={bg} />
+        <path d="m30 53 3 3M38 45l3 3M46 37l3 3M54 29l3 3" />
+      </g>
+      <path d="M55 49c1.5-1.6 4.4-.9 4.4 1.5" stroke="#17181a" stroke-width="2.2" />
+    </svg>
+  )
+}
